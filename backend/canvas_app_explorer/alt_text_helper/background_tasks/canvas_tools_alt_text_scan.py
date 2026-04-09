@@ -482,7 +482,8 @@ def extract_images_from_html(html_content: str, course_id: int) -> List[str]:
                 continue
             
             logger.info(f"Parsing Canvas file URL: {img_src}")
-            download_url = _parse_canvas_file_src(img_src)
+            # download_url = _parse_canvas_file_src(img_src)
+            download_url = img_src
         else:
             logger.info(f"Non-Canvas image URL found: {img_src}")
             download_url = img_src
