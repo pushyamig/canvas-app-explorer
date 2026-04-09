@@ -86,11 +86,12 @@ function AltTextHome(props: AltTextHomeProps) {
         user={user}
         helpURL={help_url}
       />
-      {reviewCategoryStarted ? // Review view 
+      {reviewCategoryStarted && lastScan ? // Review view 
         (
           <>
             <AltTextReview 
               categoryForReview={selectedCategory}
+              courseScanId={lastScan.id}
               onEndReview={handleEndReview}
             />
           </>

@@ -66,10 +66,11 @@ const BottomControls = styled(Box)(({ theme }) => ({
 
 interface AltTextReviewProps {
   categoryForReview: ContentCategoryForReview
+  courseScanId: number
   onEndReview: () => void
 }
 
-export default function AltTextReview( {categoryForReview, onEndReview} :AltTextReviewProps) {
+export default function AltTextReview( {categoryForReview, courseScanId, onEndReview} :AltTextReviewProps) {
   const [currentPage, setCurrentPage] = useState(1);
   const [reviewStates, setReviewStates] = useState<Record<string, ContentImageReviewState>>({});
   const [allImages, setAllImages] = useState<ContentImageEnriched[]>([]);
@@ -83,9 +84,9 @@ export default function AltTextReview( {categoryForReview, onEndReview} :AltText
   };
 
   const { data: contentItems, isFetching, error } = useQuery<ContentItem[], Error>({
-    queryKey: ['contentImages', categoryForReview],
-    queryFn: () => getContentImages(contentTypeFromCategory(categoryForReview)),
-    enabled: !!categoryForReview,
+    queryKey: ['contentImages', categoryForReview, courseScanId],
+    queryFn: () => getContentImages(contentTypeFromCategory(categoryForReview), courseScanId),
+    enabled: !!categoryForReview && courseScanId > 0,
     retry: false,
     retryOnMount: false, 
     onSuccess: (data) => {
