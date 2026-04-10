@@ -19,5 +19,6 @@ DEFAULT_CANVAS_SCOPES = [
 
     # Files (for parsing content and alt text)
     'url:GET|/courses/:course_id/files/:file_id/download',
-    'url:GET|/users/:user_id/files/:file_id/download'
+    'url:GET|/users/:user_id/files/:file_id/download',
+    'url:GET|/files/:file_id/download'
 ]
