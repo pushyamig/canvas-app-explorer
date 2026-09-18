@@ -54,9 +54,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     # 5. Cleanup to keep the image slim
     && rm -rf /var/lib/apt/lists/*
 
-# Rebuild the certificate trust store (the old setup scripts did this automatically)
-RUN update-ca-certificates
-
 # Node.js is installed from NodeSource repository using the NODE_VERSION build argument
 
 # 1. Add the Nodesource GPG Key
@@ -66,6 +63,9 @@ RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg -
     # 3. Update and install
     && apt-get update && apt-get install -y nodejs --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
+
+# Rebuild the certificate trust store after all packages are installed (the old setup scripts did this automatically)
+RUN update-ca-certificates
 
 RUN pip install --no-cache-dir -r requirements.txt
 
