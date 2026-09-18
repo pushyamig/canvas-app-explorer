@@ -118,13 +118,19 @@ def _get_db_options():
     """
     options = {'charset': 'utf8mb4'}
 
+    ssl_mode = os.getenv('DB_SSL_MODE', '').upper()
     ca_cert = os.getenv('DB_SSL_CA')
-    if ca_cert:
-        options['ssl_mode'] = os.getenv('DB_SSL_MODE', 'REQUIRED')
+
+    # Only add SSL config if mode is not DISABLED and CA cert is provided
+    if ssl_mode != 'DISABLED' and ca_cert:
+        options['ssl_mode'] = ssl_mode or 'REQUIRED'
         options['ssl'] = {'ca': ca_cert}
         # Allow disabling hostname verification for certificate CN/SAN mismatches
         if os.getenv('DB_SSL_CHECK_HOSTNAME', 'true').lower() == 'false':
             options['ssl']['check_hostname'] = False
+    elif ssl_mode == 'DISABLED':
+        # Explicitly set DISABLED mode without ssl config
+        options['ssl_mode'] = 'DISABLED'
 
     return options
 
