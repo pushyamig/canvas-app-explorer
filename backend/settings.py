@@ -110,10 +110,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 def _get_db_options():
     """
     Build database OPTIONS dict with conditional SSL support.
-    
+
     SSL Configuration:
     - DB_SSL_MODE: Values include 'REQUIRED', 'VERIFY_IDENTITY', 'VERIFY_CA', 'DISABLED', 'PREFERRED'
     - DB_SSL_CA: Path to CA certificate (optional, used for verification)
+    - DB_SSL_CHECK_HOSTNAME: Whether to verify hostname (default: 'true'). Set to 'false' to disable.
     """
     options = {'charset': 'utf8mb4'}
 
@@ -121,7 +122,10 @@ def _get_db_options():
     if ca_cert:
         options['ssl_mode'] = os.getenv('DB_SSL_MODE', 'REQUIRED')
         options['ssl'] = {'ca': ca_cert}
-    
+        # Allow disabling hostname verification for certificate CN/SAN mismatches
+        if os.getenv('DB_SSL_CHECK_HOSTNAME', 'true').lower() == 'false':
+            options['ssl']['check_hostname'] = False
+
     return options
 
 DATABASES = {
